@@ -1,4 +1,3 @@
 d3.image
-========
 
-a reusable 2d image component
+a 2d image component with rects as pixels
