@@ -80,12 +80,14 @@ d3.chart.image = ->
                 .attr "fill", (d) -> color(d.value)
                 .on "mouseover", (d) ->
                     dispatch.line_over {
-                        row: d.row,
+                        row: d.row
+                        col: d.col
                         values: data[d.row]
                     }                  
                 .on "mouseout", (d) ->
                     dispatch.line_out {
                         row: d.row
+                        col: d.col
                     }
 
     chart.pixel_width = (value) ->
