@@ -40,6 +40,8 @@ d3.chart.image = ->
             g_enter = svg.enter()
                 .append "svg"
                 .append "g"
+                .append "g"
+                .classed "rects", true
             g_enter.selectAll ".pixel"
                 .data (d) -> d
                 .enter()
@@ -69,7 +71,9 @@ d3.chart.image = ->
                 .range ["white", "black"]
 
 
-            g = svg.select "g"
+            g = svg
+                .select "g"
+                .select "g.rects"
 
             rectangles = g.selectAll "rect"
                 .data (d) -> d
