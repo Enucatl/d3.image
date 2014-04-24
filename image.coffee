@@ -4,6 +4,11 @@ if not d3.chart?
 d3.chart.image = ->
     pixel_height = 8
     pixel_width = 1
+    margin = {top: 10, right: 100, bottom: 10, left: 0}
+    height = undefined
+    width = undefined
+    dx = undefined
+    dy = undefined
     x = d3.scale.ordinal()
     y = d3.scale.ordinal()
     color = d3.scale.linear()
@@ -50,8 +55,8 @@ d3.chart.image = ->
 
             #update the dimensions
             svg
-                .attr "width", width
-                .attr "height", height
+                .attr "width", width + margin.left + margin.right
+                .attr "height", height + margin.bottom + margin.top
 
             #update scales
             x
@@ -68,11 +73,13 @@ d3.chart.image = ->
             max_scale = d3.quantile sorted, 0.95
             color
                 .domain [min_scale, max_scale] 
+                .nice()
                 .range ["white", "black"]
 
 
             g = svg
                 .select "g"
+                .attr "transform", "translate(#{margin.left}, #{margin.top})"
                 .select "g.rects"
 
             rectangles = g.selectAll "rect"
@@ -128,6 +135,24 @@ d3.chart.image = ->
         if not arguments.length
             return color
         color = value
+        chart
+
+    chart.height = ->
+        return dy * pixel_height
+
+    chart.width = ->
+        return dx * pixel_width
+
+    chart.color_value = (value) ->
+        if not arguments.length
+            return color_value
+        color_value = value
+        chart
+
+    chart.margin = (value) ->
+        if not arguments.length
+            return margin
+        margin = value
         chart
 
     chart.color_value = (value) ->
