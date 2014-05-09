@@ -71,6 +71,11 @@ d3.chart.image = ->
 
             rectangles = g.selectAll "rect"
                 .data (d) -> d
+
+            rectangles
+                .enter()
+                .append ".rect"
+                .classed "pixel", true
                 .attr "x", (d) -> x(d.col)
                 .attr "y", (d) -> y(d.row)
                 .attr "height", pixel_height
@@ -85,6 +90,8 @@ d3.chart.image = ->
                     dispatch.line_out {
                         row: d.row
                     }
+
+            rectangles.exit().remove()
 
     chart.pixel_width = (value) ->
         if not arguments.length
