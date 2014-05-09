@@ -12,7 +12,8 @@
     </script>
     <script type="text/javascript">
         var image = d3.chart.image()
-            .pixel_height(1)
+            .pixel_height(8)
+            .pixel_width(2)
             .color_value(function(d) { return d; });
         d3.json("/lena", function(error, json) {
             if (error) return console.warn(error);

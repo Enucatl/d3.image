@@ -4,9 +4,7 @@ if not d3.chart?
 d3.chart.image = ->
     pixel_height = 8
     pixel_width = 1
-    margin = {top: 10, right: 100, bottom: 10, left: 0}
-    height = undefined
-    width = undefined
+    margin = {top: 0, right: 100, bottom: 10, left: 0}
     dx = undefined
     dy = undefined
     color = d3.scale.linear()
@@ -16,10 +14,11 @@ d3.chart.image = ->
     chart = (selection) ->
         selection.each (data) ->
 
+            data = data.map (d) -> d.map color_value
+
             #get the right key from the object
             dx = data[0].length
             dy = data.length
-            console.log "dx", dx, "dy", dy
 
             height = pixel_height * dy
             width = pixel_width * dx
@@ -41,7 +40,6 @@ d3.chart.image = ->
                 .style "height", height + "px" 
 
             #fix color scale
-            console.log "data", data
             flattened = data.reduce (a, b) -> a.concat b
             sorted = flattened.sort d3.ascending
             min_scale = d3.quantile sorted, 0.05
@@ -59,11 +57,12 @@ d3.chart.image = ->
                 p = -1
                 for row in data
                     for pixel in row
-                        c = d3.rgb color color_value pixel
+                        c = d3.rgb color pixel
                         image.data[++p] = c.r;
                         image.data[++p] = c.g;
                         image.data[++p] = c.b;
                         image.data[++p] = 255;
+                context.imageSmoothingEnabled = false
                 context.putImageData image, margin.left, margin.top 
 
             canvas.call draw_image
