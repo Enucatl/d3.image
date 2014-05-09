@@ -9,8 +9,6 @@ d3.chart.image = ->
     width = undefined
     dx = undefined
     dy = undefined
-    x = d3.scale.ordinal()
-    y = d3.scale.ordinal()
     color = d3.scale.linear()
     color_value = (d) -> d[0]
     dispatch = d3.dispatch "line_over", "line_out"
@@ -21,46 +19,30 @@ d3.chart.image = ->
             #get the right key from the object
             dx = data[0].length
             dy = data.length
+            console.log "dx", dx, "dy", dy
 
             height = pixel_height * dy
             width = pixel_width * dx
 
-            layout = []
-            for i in [0..(dx - 1)]
-                for j in [0..(dy - 1)]
-                    layout.push {
-                        col: i
-                        row: j
-                        value: color_value data[j][i]
-                    }
-
             #select the svg if it exists
-            svg = d3.select this
-                .selectAll "svg"
-                .data [layout]
+            canvas = d3.select this
+                .selectAll "canvas"
+                .data [data]
 
             #otherwise create the skeletal chart
-            g_enter = svg.enter()
-                .append "svg"
-                .append "g"
-                .append "g"
-                .classed "rects", true
+            g_enter = canvas.enter()
+                .append "canvas"
 
             #update the dimensions
-            svg
-                .attr "width", width + margin.left + margin.right
-                .attr "height", height + margin.bottom + margin.top
-
-            #update scales
-            x
-                .domain d3.range(dx)
-                .rangePoints [0, width - pixel_width], 0
-            y
-                .domain d3.range(dy)
-                .rangePoints [height - pixel_height, 0], 0
+            canvas
+                .attr "width", dx
+                .attr "height", dy
+                .style "width", width + "px" 
+                .style "height", height + "px" 
 
             #fix color scale
-            flattened = layout.map (d) -> d.value
+            console.log "data", data
+            flattened = data.reduce (a, b) -> a.concat b
             sorted = flattened.sort d3.ascending
             min_scale = d3.quantile sorted, 0.05
             max_scale = d3.quantile sorted, 0.95
@@ -69,37 +51,23 @@ d3.chart.image = ->
                 .nice()
                 .range ["white", "black"]
 
+            draw_image = (canvas) ->
+                context = canvas
+                    .node()
+                    .getContext "2d"
+                image = context.createImageData dx, dy 
+                p = -1
+                for row in data
+                    for pixel in row
+                        c = d3.rgb color color_value pixel
+                        image.data[++p] = c.r;
+                        image.data[++p] = c.g;
+                        image.data[++p] = c.b;
+                        image.data[++p] = 255;
+                context.putImageData image, margin.left, margin.top 
 
-            g = svg
-                .select "g"
-                .attr "transform", "translate(#{margin.left}, #{margin.top})"
-                .select "g.rects"
+            canvas.call draw_image
 
-            rectangles = g.selectAll ".pixel"
-                .data (d) -> d
-
-            rectangles
-                .enter()
-                .append "rect"
-                .classed "pixel", true
-                .attr "x", (d) -> x(d.col)
-                .attr "y", (d) -> y(d.row)
-                .attr "height", pixel_height
-                .attr "width", pixel_width
-                .attr "fill", (d) -> color(d.value)
-                .on "mouseover", (d) ->
-                    dispatch.line_over {
-                        row: d.row
-                        col: d.col
-                        values: data[d.row]
-                    }                  
-                .on "mouseout", (d) ->
-                    dispatch.line_out {
-                        row: d.row
-                        col: d.col
-                    }
-
-            rectangles.exit().remove()
 
     chart.pixel_width = (value) ->
         if not arguments.length
@@ -117,18 +85,6 @@ d3.chart.image = ->
         if not arguments.length
             return key
         key = value
-        chart
-
-    chart.x = (value) ->
-        if not arguments.length
-            return x
-        x = value
-        chart
-
-    chart.y = (value) ->
-        if not arguments.length
-            return y
-        y = value
         chart
 
     chart.color = (value) ->
