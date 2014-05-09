@@ -17,8 +17,6 @@ d3.chart.image = ->
             dx = data[0].length
             dy = data.length
 
-            pixel_height = 8
-            pixel_width = 1
             height = pixel_height * dy
             width = pixel_width * dx
 

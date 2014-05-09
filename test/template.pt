@@ -1,0 +1,24 @@
+<html>
+    <body>
+        <h1>Test image</h1>
+        <div id="test-image">
+        </div>
+    </body>
+    <script src="http://d3js.org/d3.v3.min.js" charset="utf-8">
+    </script>
+    <script
+        src="/static/_image.js"
+        type="text/javascript">
+    </script>
+    <script type="text/javascript">
+        var image = d3.chart.image()
+            .pixel_height(1)
+            .color_value(function(d) { return d; });
+        d3.json("/lena", function(error, json) {
+            if (error) return console.warn(error);
+            d3.select("#test-image")
+                .data([json])
+                .call(image);
+        });
+    </script>
+</html>
