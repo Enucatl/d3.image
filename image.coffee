@@ -45,11 +45,6 @@ d3.chart.image = ->
                 .append "g"
                 .append "g"
                 .classed "rects", true
-            g_enter.selectAll ".pixel"
-                .data (d) -> d
-                .enter()
-                .append "rect"
-                .classed "pixel", true
 
             #update the dimensions
             svg
@@ -80,12 +75,12 @@ d3.chart.image = ->
                 .attr "transform", "translate(#{margin.left}, #{margin.top})"
                 .select "g.rects"
 
-            rectangles = g.selectAll "rect"
+            rectangles = g.selectAll ".pixel"
                 .data (d) -> d
 
             rectangles
                 .enter()
-                .append ".rect"
+                .append "rect"
                 .classed "pixel", true
                 .attr "x", (d) -> x(d.col)
                 .attr "y", (d) -> y(d.row)
