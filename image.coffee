@@ -4,7 +4,7 @@ if not d3.chart?
 d3.chart.image = ->
     pixel_height = 8
     pixel_width = 1
-    margin = {top: 0, right: 100, bottom: 10, left: 0}
+    margin = {top: 20, right: 0, bottom: 20, left: 20}
     dx = undefined
     dy = undefined
     color = d3.scale.linear()
@@ -38,6 +38,10 @@ d3.chart.image = ->
                 .attr "height", dy
                 .style "width", width + "px" 
                 .style "height", height + "px" 
+                .style "margin-top", margin.top + "px" 
+                .style "margin-left", margin.left + "px" 
+                .style "margin-bottom", margin.bottom + "px" 
+                .style "margin-right", margin.right + "px" 
 
             #fix color scale
             flattened = data.reduce (a, b) -> a.concat b
@@ -63,7 +67,7 @@ d3.chart.image = ->
                         image.data[++p] = c.b;
                         image.data[++p] = 255;
                 context.imageSmoothingEnabled = false
-                context.putImageData image, margin.left, margin.top 
+                context.putImageData image, 0, 0
 
             canvas.call draw_image
 
