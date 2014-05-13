@@ -43,6 +43,20 @@ d3.chart.image = ->
                 .style "margin-bottom", margin.bottom + "px" 
                 .style "margin-right", margin.right + "px" 
 
+            get_mouse_position = (event) ->
+                rect = canvas.node().getBoundingClientRect()
+                position = {
+                    col: Math.floor (event.clientX - rect.left) / pixel_width
+                    row: Math.floor (event.clientY - rect.top) / pixel_height
+                }
+                return position
+            
+            canvas.on "mousemove", ->
+                position = get_mouse_position(d3.event)
+                position.values = data[position.row]
+                console.log position
+                dispatch.line_over position
+
             #fix color scale
             flattened = data.reduce (a, b) -> a.concat b
             sorted = flattened.sort d3.ascending
@@ -70,7 +84,6 @@ d3.chart.image = ->
                 context.putImageData image, 0, 0
 
             canvas.call draw_image
-
 
     chart.pixel_width = (value) ->
         if not arguments.length
