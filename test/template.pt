@@ -62,8 +62,6 @@
                 .scale(image.color())
                 .origin(origin)
                 .margin(image.margin())
-                .image_thickness(image.width())
-                .image_length(image.height())
                 .barlength(512)
                 .thickness(10);
 
