@@ -54,7 +54,6 @@ d3.chart.image = ->
             canvas.on "mousemove", ->
                 position = get_mouse_position(d3.event)
                 position.values = data[position.row]
-                console.log position
                 dispatch.line_over position
 
             #fix color scale
