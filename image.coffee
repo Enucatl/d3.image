@@ -4,7 +4,7 @@ if not d3.chart?
 d3.chart.image = ->
     pixel_height = 8
     pixel_width = 1
-    margin = {top: 20, right: 0, bottom: 20, left: 20}
+    margin = {top: 5, right: 0, bottom: 20, left: 20}
     dx = undefined
     dy = undefined
     color = d3.scale.linear()
