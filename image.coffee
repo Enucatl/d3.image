@@ -15,8 +15,8 @@ class d3.chart.Image extends d3.chart.BaseChart
         # convenience accessors
         width = @width()
         height = @height()
-        original_width = @width()
-        original_height = @height()
+        original_width = @original_width()
+        original_height = @original_height()
         margin = @margin()
         color_value = @color_value()
         color_scale = @color_scale()
